@@ -1,0 +1,5 @@
+outs:
+- md5: 99fffa331d2e38c80f69d770ff40dd99
+  size: 112
+  hash: md5
+  path: symmetric_matrix_A.RData

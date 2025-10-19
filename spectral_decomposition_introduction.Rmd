@@ -1,0 +1,79 @@
+# Spectral Decomposition of Symmetric Matrices
+
+# 1. Eigenvectors
+
+An **eigenvector** $\boldsymbol{v}$ of a square matrix $A$ is a vector for which multiplication with A has the same result as multiplication by a scalar $\lambda$. The scalar $\lambda$ is known as an **eigenvalue**.
+
+$$
+\boldsymbol{Av}=\lambda\boldsymbol{v}
+$$
+
+The following code shows how eigenvectors and eigenvalues can be determined for square matrices in R.
+
+```{r}
+# Load 5x5 square matrix A
+load("data/symmetric_matrix_A.RData")
+
+# Get eigen values and eigen vectors
+print("Eigenvalues of A")
+( round(eigen(A)$values, 2) )
+
+print("Eigenvectors of A")
+( round(eigen(A)$vectors, 2) )
+```
+
+The following example shows that multiplying the first eigenvector by the first eigenvalue gives the first column of the product $\boldsymbol{Av}$.
+
+```{r}
+# Get first eigenvector and first eigenvalue, and their product
+e1 <- eigen(A)$vectors[, 1, drop = FALSE]
+lambda1 <- eigen(A)$values[1]
+print("Scaling the first eigenvector by the first eigenvalue")
+( scaled_e1 <- round(lambda1 * e1, 2) )
+
+# Get first row of product Av
+print("Applying A to the first eigenvector")
+( transformed_e1 <- round(A %*% e1, 2) )
+
+print("Outcomes are the same!")
+```
+
+# 2. Spectral Decomposition
+
+## 2.1. Symmetric Matrices
+
+A symmetric matrix is a matrix that is symmetric across the main diagonal (top left to bottom right). Equivalently, a symmetric matrix $A$ is equal to its transpose $A^T$. The matrix $A$ from section 1 is an example of a symmetric matrix.
+
+```{r}
+print("A")
+(A)
+
+print("Transpose of A")
+(t(A))
+```
+
+## 2.2 Spectral Decomposition with Eigenvalues
+
+Symmetric matrices have the unique property that all of their eigenvectors are **orthogonal** (perpendicular to each other). This allows a symmetric matrix to be **decomposed** (factorised) into a simple combination of matrices.
+
+$$
+A=P\Lambda P^T
+$$
+
+Here, $\Lambda$ is a **diagonal matrix** containing the eigenvalues and $P$ is a matrix whose columns are the corresponding eigenvectors. This factorisation of $A$ is known as **spectral decomposition**, and is demonstrated from scratch and with built-in R functions below.
+
+```{r}
+print("Spectral decomposition from scratch")
+print("P: a matrix of eigenvectors")
+P <- eigen(A)$vectors
+print(round(P,2))
+
+print("Lambda: a diagonal matrix of eigenvalues")
+Lambda <- diag(eigen(A)$values)
+print(round(Lambda,2))
+
+print("Combining the spectral decomposition: t(P) x Lambda x P")
+spectral_prod <- P %*% Lambda %*% t(P)
+print(spectral_prod)
+print(A)
+```
